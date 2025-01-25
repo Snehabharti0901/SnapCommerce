@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'my-app'
-        REGISTRY_URL = ''  
+        REGISTRY_URL = 'au-syd.icr.io/sneha-namespaceg'  
         CLUSTER_NAME = ''  
     }
     stages {
