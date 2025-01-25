@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'my-app'
-        REGISTRY_URL = '<YOUR_REGISTRY_URL>'  // Replace with your container registry URL
-        CLUSTER_NAME = '<YOUR_CLUSTER_NAME>'  // Replace with your Kubernetes cluster name
+        REGISTRY_URL = ''  
+        CLUSTER_NAME = ''  
     }
     stages {
         stage('Checkout') {
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        ibmcloud login --apikey ApiKey-fc350ce7-b664-4903-85d6-23ec06d3c2fa -r 'au-syd' -g '96329f9feb004eb4b6c8ec77a37f17e8'  // Replace placeholders with actual values
+                        ibmcloud login --apikey ApiKey-fc350ce7-b664-4903-85d6-23ec06d3c2fa -r 'au-syd' -g '96329f9feb004eb4b6c8ec77a37f17e8'  
                         ibmcloud ks cluster config --cluster $CLUSTER_NAME
                         kubectl apply -f k8s/deployment.yaml
                     '''
