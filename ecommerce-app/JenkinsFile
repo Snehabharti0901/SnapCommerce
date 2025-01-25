@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = 'my-app'
+        REGISTRY_URL = '<YOUR_REGISTRY_URL>'  // Replace with your container registry URL
+        CLUSTER_NAME = '<YOUR_CLUSTER_NAME>'  // Replace with your Kubernetes cluster name
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Snehabharti0901/SnapCommerce.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t $REGISTRY_URL/$DOCKER_IMAGE .'
+                }
+            }
+        }
+        stage('Push Docker Image to IBM Cloud Container Registry') {
+            steps {
+                script {
+                    sh 'docker push $REGISTRY_URL/$DOCKER_IMAGE'
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh '''
+                        ibmcloud login --apikey ApiKey-fc350ce7-b664-4903-85d6-23ec06d3c2fa -r 'au-syd' -g '96329f9feb004eb4b6c8ec77a37f17e8'  // Replace placeholders with actual values
+                        ibmcloud ks cluster config --cluster $CLUSTER_NAME
+                        kubectl apply -f k8s/deployment.yaml
+                    '''
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline executed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
